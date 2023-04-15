@@ -19,4 +19,21 @@ class SessionsController < ApplicationController
         session.delete :user_id
         head :no_content
     end
+
+    # POST /admin
+    def in
+        admin = Admin.find_by(admin_name: params[:admin_name])
+        if admin$.authenticate(params[:password])
+            session[:admin_id] = admin.id
+            render json: admin, status: :created
+        else
+            render json: { errors: ["Invalid admin_name or password"] }, status: :unauthorized
+        end
+    end
+
+    # DELETE /adminout
+    def out
+        session.delete :admin_id
+        head :no_content
+    end
 end
