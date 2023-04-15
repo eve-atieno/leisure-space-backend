@@ -1,7 +1,6 @@
 class UsersController < ApplicationController
 
-before_action :authorize
-
+ 
 def index
 	users = User.all
 	render json: users
@@ -27,6 +26,10 @@ end
 
 def find_users
 	User.find(params[:id])
+end
+
+def user_params
+	params.permit(:name, :email, :password)
 end
 
 end

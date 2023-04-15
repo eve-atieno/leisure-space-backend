@@ -4,6 +4,8 @@ class ApplicationController < ActionController::Base
 
     rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_response
 
+    skip_before_action :verify_authenticity_token
+
     before_action :authorize
 
     def authorize
