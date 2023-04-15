@@ -15,7 +15,6 @@ class SpacesController < ApplicationController
 
 	def create
 		space = Space.create!(space_params)
-
 		render json: space, status: :created
 	end
 

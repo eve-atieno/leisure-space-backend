@@ -28,3 +28,5 @@ end
 def find_users
 	User.find(params[:id])
 end
+
+end
