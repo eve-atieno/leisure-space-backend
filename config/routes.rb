@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
   resources :galleries
-  resources :names
   resources :reviews
   resources :bookings
   resources :admins
