@@ -1,7 +1,7 @@
 class AdminsController < ApplicationController
 	
   def show
-    admin = Admin.find(session[:user_id])
+    admin = Admin.find(session[:admin_id])
     render json: admin
   end
 

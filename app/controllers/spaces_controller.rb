@@ -14,7 +14,9 @@ class SpacesController < ApplicationController
 	end
 
 	def create
-		space = Space.create(space_params)
+		space = Space.create!(space_params)
+
+		render json: space, status: :created
 	end
 
 
@@ -25,11 +27,11 @@ class SpacesController < ApplicationController
 	end
 
 	def space_params
-
+		params.permit(:name, :description, :image_url)
 	end
 
 	def authorize
-		return render json: {error: "Not authorized to perform this action"}, status: :unauthorized unless session.inlude? :admin_id
+		render json: {error: "Not authorized to perform this action"}, status: :unauthorized unless session.inlude? :admin_id
 	end
 end
 

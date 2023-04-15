@@ -5,9 +5,8 @@ Rails.application.routes.draw do
   resources :bookings
   resources :admins
   resources :users
-  resources :spaces, only: [:index, :show]
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  resources :spaces, only: [:index, :show, :create]
 
-  # Defines the root path route ("/")
-  # root "articles#index"
+  get "/login", to: "user#login"
+
 end
