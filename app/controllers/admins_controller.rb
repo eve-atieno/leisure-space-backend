@@ -1,7 +1,5 @@
 class AdminsController < ApplicationController
-  skip_before_action :authorize, only: [:index, :show, :create, :update, :destroy]
-
-
+  
   def index
     admins = Admin.all
     render json: admins
@@ -21,6 +19,17 @@ class AdminsController < ApplicationController
     end
   end
 
+  def update
+    admin = Admin.find(session[:admin_id])
+    admin.update(admin_params)
+    render json: admin
+  end
+
+  def destroy
+    admin = Admin.find(session[:admin_id])
+    admin.destroy
+    render json: admin
+  end
 
   private 
 

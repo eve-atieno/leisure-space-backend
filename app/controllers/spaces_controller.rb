@@ -1,37 +1,45 @@
 class SpacesController < ApplicationController
+# get all spaces
+def index
+	spaces = Space.all
+	render json: spaces
+end
 
-	before_action :authorize
-	skip_before_action :authorize, only: %i[index show]
-	
-	def index
-		spaces = Space.all
-		render json: spaces, status: :ok
+# get a space
+def show
+	space = Space.find(params[:id])
+	render json: space
+end
+
+# create a space
+def create
+	space = Space.create(space_params)
+	if space.save
+		render json: space.as_json(only: [:id, :name, :description, :location, :price]), status: :created
+	else
+		render json: space.errors, status: :unprocessable_entity
 	end
+end
 
-	def show
-		space = find_space
-		render json: space, status: :ok
-	end
+# update a space
+def update
+	space = Space.find(params[:id])
+	space.update_attributes(space_params)
+	render json: space
+end
 
-	def create
-		space = Space.create!(space_params)
-		render json: space, status: :created
-	end
+# delete a space
+def destroy
+	space = Space.find(params[:id])
+	space.destroy
+	head :no_content, status: :ok
+end
 
+private
 
-	private
-
-	def find_space
-		Space.find(params[:id])
-	end
-
-	def space_params
-		params.permit(:name, :description, :image_url)
-	end
-
-	def authorize
-		render json: {error: "Not authorized to perform this action"}, status: :unauthorized unless session.inlude? :admin_id
-	end
+def space_params
+	params.permit(:name, :description, :location, :price)
+end
 end
 
 
