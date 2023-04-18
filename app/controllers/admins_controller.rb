@@ -12,7 +12,12 @@ class AdminsController < ApplicationController
 
     def create
         admin=Admin.create(admin_params)
-        render json: admin
+       if admin.valid?
+        render json: admin, status: :created
+       else
+        render json: { error: admin.errors.full_messages.join(', ') }, status: :unprocessable_entity
+    
+       end
     end
 
     def update
