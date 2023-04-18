@@ -1,37 +1,35 @@
 class ReviewsController < ApplicationController
-#get all reviews
-    def index
-        reviews = Review.all
-        render json: reviews
-        end
-#get one review
-    def show
-        review = Review.find(params[:id])
-        render json: review
-        end
-#create a review
-    def create
-        review = Review.create(review_params)
-        render json: review
-        end
 
-# update a review
+    def index
+        reviews=Review.all
+        render json: reviews
+    end
+
+    def show
+        reviews=Review.find(params[:id])
+        render json: reviews
+    end
+
+    def create
+        reviews=Review.create(reviews_params)
+        render json: reviews
+    end
+
     def update
-        review = Review.find(params[:id])
-        review.update(review_params)
-        render json: review
-        end
-#delete a review
+        reviews=Review.find(params[:id])
+        reviews.update(reviews_params)
+        render json: reviews
+    end
+
     def destroy
-        review = Review.find(params[:id])
-        review.destroy
-        render json: review
-        end
+        reviews=Review.find(params[:id])
+        reviews.destroy
+        render json: reviews
+    end
 
     private
-    def review_params
-        params.permit(:content, :rating, :space_id)
-        end
 
-        
+    def reviews_params
+        params.permit(:rating, :content, :profile_id, :space_id)
+    end
 end
