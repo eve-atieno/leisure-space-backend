@@ -66,7 +66,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_18_123722) do
     t.string "name"
     t.string "description"
     t.string "location"
-    t.string "price"
+    t.integer "price"
     t.bigint "admin_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

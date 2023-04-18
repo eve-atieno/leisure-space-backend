@@ -12,7 +12,12 @@ class UsersController < ApplicationController
 
     def create
         users=User.create(users_params)
-        render json: users
+         if users.valid?
+        render json: users, status: :created
+         else
+        render json: { error: users.errors.full_messages.join(', ') }, status: :unprocessable_entity
+         end
+
     end
 
     def update
