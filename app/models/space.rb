@@ -1,6 +1,6 @@
 class Space < ApplicationRecord
+    # belongs_to :admin
     has_many :bookings
-    has_many :reviews, through: :users
-    belongs_to :admin
-    has_many :galleries
+    has_many :reviews
+    has_many :medias
 end
