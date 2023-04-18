@@ -1,3 +1,3 @@
 class BookingSerializer < ActiveModel::Serializer
-  attributes :start_time, :end_time
+  attributes :id, :start_date, :end_date, :profile_id, :space_id
 end
