@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :galleries, only: [:show, :index, :create]
+  resources :media, only: [:show, :index, :create]
   # resources :names
   resources :reviews, only: [:show, :index, :create]
   resources :bookings, only: [:show, :index, :create, :destroy, :checkout]
