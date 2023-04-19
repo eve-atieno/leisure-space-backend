@@ -1,13 +1,13 @@
 class CategoriesController < ApplicationController
-    skip_before_action :authorize, only: [:index, :show, :locate, :update, :create, :destroy]
+    skip_before_action :authorize, only: [:index, :show, :update, :create, :destroy]
     before_action :administration
-    skip_before_action :administration, only: [:index, :show, :locate, :update, :create, :destroy]
+    skip_before_action :administration, only: [:index, :show, :update, :create, :destroy]
 
     rescue_from ActiveRecord::RecordNotFound, with: :render_not_found_response
 
     # GET /categories
     def index
-        @categories = category.all
+        @categories = Category.all
         render json: @categories
     end
 

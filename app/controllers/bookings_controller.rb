@@ -14,7 +14,7 @@ class BookingsController < ApplicationController
     end
 
     # POST /bookings
-    def bookings
+    def create
         user = User.find_by(id: session[:user_id])
         bookings = user.bookings.all
         booking = user.bookings.create!(booking_params)
