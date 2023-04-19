@@ -1,11 +1,5 @@
 Rails.application.routes.draw do
-  resources :media
-  resources :reviews
-  resources :bookings
-  resources :spaces
-  resources :profiles
-  resources :admins
-  resources :users
+
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   get "/login", to: "user#login"
 
