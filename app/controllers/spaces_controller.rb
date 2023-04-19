@@ -3,13 +3,13 @@ class SpacesController < ApplicationController
 	before_action :find_space, only: %i[ show update destroy ]
 	skip_before_action :authorize, only: %i[ index show create update destroy ]
 	
-	# GET /items
+	# GET /spaces
 	def index
 		@spaces = Space.all
 		render json: @spaces, status: :ok
 	end
 
-	# GET /items/:id
+	# GET /spaces/:id
 	def show
 		render json: find_space, status: :ok
 	end
@@ -20,14 +20,14 @@ class SpacesController < ApplicationController
 		render json: space, status: :created
 	end
 
-	# PATCH /items/:id
+	# PATCH /spaces/:id
 	def update
 		space = find_space
 		space.update(find_space)
 		render json: space, status: :created
 	end
 
-	# DELETE /items/:id
+	# DELETE /spaces/:id
 	def destroy
 		find_space.destroy
 	end
