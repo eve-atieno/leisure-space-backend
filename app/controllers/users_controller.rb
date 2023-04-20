@@ -1,30 +1,40 @@
 class UsersController < ApplicationController
 
-before_action :authorize
+    def index
+        users=User.all
+        render json: users
+    end
 
-def index
-	users = User.all
-	render json: users
-end
+    def show
+        users=User.find(params[:id])
+        render json: users
+    end
 
-def create
-	user = User.create!(user_params)
-	render json: user, status: :created
-end
+    def create
+        users=User.create(users_params)
+         if users.valid?
+        render json: users, status: :created
+         else
+        render json: { error: users.errors.full_messages.join(', ') }, status: :unprocessable_entity
+         end
 
-def update
-	user = find_user
-	user.update!(user_params)
+    end
 
-	render json: user, status: :created
-end
+    def update
+        users=User.find(params[:id])
+        users.update(users_params)
+        render json: users
+    end
 
-private
+    def destroy
+        users=User.find(params[:id])
+        users.destroy
+        render json: users
+    end
 
-def authorize
-		return render json: {error: "Not authorized to perform this action"}, status: :unauthorized unless session.inlude? :admin_id
-end
+    private
 
-def find_users
-	User.find(params[:id])
+    def users_params
+        params.permit(:email, :password, :is_active)
+    end
 end
