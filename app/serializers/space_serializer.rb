@@ -1,3 +1,3 @@
 class SpaceSerializer < ActiveModel::Serializer
-  attributes :id, :name, :description, :image_url, :price, :location
+  attributes :id, :name, :description, :price, :location, :admin_id
 end

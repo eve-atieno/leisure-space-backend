@@ -1,6 +1,6 @@
 require "test_helper"
 
-class GalleryTest < ActiveSupport::TestCase
+class MediaControllerTest < ActionDispatch::IntegrationTest
   # test "the truth" do
   #   assert true
   # end

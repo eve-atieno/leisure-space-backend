@@ -33,7 +33,7 @@ class SpacesController < ApplicationController
 	end
 
 
-	private
+    private
 
 	def find_space
 		@space = Space.find_by(id: params[:id])
@@ -51,5 +51,3 @@ class SpacesController < ApplicationController
 		render json: { error: "Space not found" }, status: :not_found
 	end
 end
-
-
