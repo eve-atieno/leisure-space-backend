@@ -1,13 +1,24 @@
 Rails.application.routes.draw do
-  resources :media
-  resources :reviews
-  resources :bookings
-  resources :spaces
-  resources :profiles
-  resources :admins
-  resources :users
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-  get "/login", to: "user#login"
+  resources :media, only: [:show, :index, :create]
+  # resources :names
+  resources :reviews, only: [:show, :index, :create]
+  resources :bookings, only: [:show, :index, :create, :destroy, :checkout]
+  # resources :admins, only: [:show, :create]
+  # resources :users, only: [:show, :create]
+  resources :spaces, only: [:index, :show, :create, :update, :destroy]
+  resources :categories, only: [:index, :show, :destroy, :create, :update]
+
+  post "/signup", to: "users#create"
+  post "/me", to: "users#show"
+  post "/login", to: "sessions#create"
+  delete "/logout", to: "sessions#destroy"
+
+  # admin
+  post "/adminin", to: "sessions#in"
+  delete "/adminout", to: "sessions#out"
+  get "/ad", to: "admins#show"
+  post "/newadmin", to: "admins#create"
+
 
   # USERs routes
   get "/users", to: "users#index"

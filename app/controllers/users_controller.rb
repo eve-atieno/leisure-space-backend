@@ -1,40 +1,47 @@
 class UsersController < ApplicationController
 
-    def index
-        users=User.all
-        render json: users
-    end
+    skip_before_action :authorize, only:[:create]
 
+    # def index
+    # 	users = User.all
+    # 	render json: users
+    # end
+
+    # GET /me
     def show
-        users=User.find(params[:id])
-        render json: users
+        user = User.find_by(id: session[:user_id])
+        render json: user, status: :created
     end
 
+    # POST /signup
     def create
-        users=User.create(users_params)
-         if users.valid?
-        render json: users, status: :created
-         else
-        render json: { error: users.errors.full_messages.join(', ') }, status: :unprocessable_entity
-         end
-
+        user = User.create!(user_params)
+        session[:user_id] = user.id
+        render json: user, status: :created
     end
 
-    def update
-        users=User.find(params[:id])
-        users.update(users_params)
-        render json: users
-    end
+    # def update
+    # 	user = find_user
+    # 	user.update!(user_params)
 
-    def destroy
-        users=User.find(params[:id])
-        users.destroy
-        render json: users
-    end
+    # 	render json: user, status: :created
+    # end
 
     private
 
-    def users_params
-        params.permit(:email, :password, :is_active)
+    # def authorize
+    # 		return render json: {error: "Not authorized to perform this action"}, status: :unauthorized unless session.inlude? :admin_id
+    # end
+
+    # def find_users
+    # 	User.find(params[:id])
+    # end
+
+    def set_user
+        @user = User.find(params[:id])
+    end
+
+    def user_params
+        params.permit(:username, :password, :password_confirmation)
     end
 end

@@ -1,35 +1,37 @@
 class ReviewsController < ApplicationController
 
-    def index
-        reviews=Review.all
-        render json: reviews
-    end
+    before_action :set_review, only: %i[ show index create ]
+	skip_before_action :authorize, only: %i[ show index create ]
+	
+	# GET /reviews
+	def index
+		@reviews = Review.all
+		render json: @reviews, status: :ok
+	end
 
-    def show
-        reviews=Review.find(params[:id])
-        render json: reviews
-    end
+	# GET /reviews/:id
+	def show
+		render json: set_review, status: :ok
+	end
 
+    # POST /reviews
     def create
-        reviews=Review.create(reviews_params)
-        render json: reviews
-    end
-
-    def update
-        reviews=Review.find(params[:id])
-        reviews.update(reviews_params)
-        render json: reviews
-    end
-
-    def destroy
-        reviews=Review.find(params[:id])
-        reviews.destroy
-        render json: reviews
-    end
+		review = Review.create!(review_params)
+		render json: review, status: :created
+	end
 
     private
 
-    def reviews_params
-        params.permit(:rating, :content, :profile_id, :space_id)
-    end
+	def set_review
+		@review = Review.find_by(id: params[:id])
+	end
+
+	def review_params
+		params.require(:review).permit(:content, :rating)
+	end
+
+	def render_not_found_response
+		render json: { error: "Review not found" }, status: :not_found
+	end
+
 end
