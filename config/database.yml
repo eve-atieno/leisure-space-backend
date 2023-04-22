@@ -81,6 +81,7 @@ test:
 #
 production:
   <<: *default
+  url: <%= ENV["postgres://leisurespace_backend_production_user:HX37pNYhdTNooVVI5khU8drjuaxlEGxE@dpg-ch1sqjt269v61fahj6fg-a/leisurespace_backend_production"] %>
   database: leisureSpace_backend_production
-  username: leisureSpace_backend
-  password: <%= ENV["LEISURESPACE_BACKEND_DATABASE_PASSWORD"] %>
+  username: leisurespace_backend_production_user
+  password: <%= ENV["HX37pNYhdTNooVVI5khU8drjuaxlEGxE"] %>
