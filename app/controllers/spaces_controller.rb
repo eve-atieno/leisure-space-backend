@@ -1,8 +1,7 @@
 class SpacesController < ApplicationController
 
-	before_action :find_space, only: %i[ show update destroy ]
-	skip_before_action :authorize, only: %i[ index show create update destroy ]
-	
+    skip_before_action :authorized, only: [:create, :index, :show, :update, :destroy]
+
 	# GET /spaces
 	def index
 		@spaces = Space.all
