@@ -20,7 +20,7 @@ class SessionsController < ApplicationController
         head :no_content
     end
 
-    # POST /admin
+    # POST /adminin
     def in
         admin = Admin.find_by(admin_name: params[:admin_name])
         if admin$.authenticate(params[:password])

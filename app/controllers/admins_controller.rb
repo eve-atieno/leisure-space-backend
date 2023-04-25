@@ -1,31 +1,28 @@
 class AdminsController < ApplicationController
-  skip_before_action :authorize, only: [:index, :show, :create, :update, :destroy]
-
-
-  def index
-    admins = Admin.all
-    render json: admins
-  end
-
+  before_action :administration, only: [:show]
+  skip_before_action :authorize, only: [:show, :create]
+	
+  # GET /admin
   def show
     admin = Admin.find(session[:admin_id])
-    render json: admin
+    render json: admin, status: :created
   end
 
+  # POST /newadmin
   def create
-    user = Admin.create(admin_params)
-    if user.valid?
-      render json: { user: user }, status: :created
-    else
-      render json: { error: user.errors.full_messages.join(', ') }, status: :unprocessable_entity
-    end
+    admin = Admin.create!(admin_params)
+    render json: admin, status: :created
   end
 
 
-  private 
+  private
+
+  def set_admin
+    @admin = Admin.find(params[:id])
+  end
 
   def admin_params
-    params.permit(:name , :password, :email)
+    params.permit(:email, :password, :password_confirmation)
   end
 
 end

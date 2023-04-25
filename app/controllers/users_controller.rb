@@ -1,35 +1,47 @@
 class UsersController < ApplicationController
 
- 
-def index
-	users = User.all
-	render json: users
-end
+    skip_before_action :authorize, only:[:create]
 
-def create
-	user = User.create!(user_params)
-	render json: user, status: :created
-end
+    # def index
+    # 	users = User.all
+    # 	render json: users
+    # end
 
-def update
-	user = find_user
-	user.update!(user_params)
+    # GET /me
+    def show
+        user = User.find_by(id: session[:user_id])
+        render json: user, status: :created
+    end
 
-	render json: user, status: :created
-end
+    # POST /signup
+    def create
+        user = User.create!(user_params)
+        session[:user_id] = user.id
+        render json: user, status: :created
+    end
 
-private
+    # def update
+    # 	user = find_user
+    # 	user.update!(user_params)
 
-def authorize
-		return render json: {error: "Not authorized to perform this action"}, status: :unauthorized unless session.inlude? :admin_id
-end
+    # 	render json: user, status: :created
+    # end
 
-def find_users
-	User.find(params[:id])
-end
+    private
 
-def user_params
-	params.permit(:name, :email, :password)
-end
+    # def authorize
+    # 		return render json: {error: "Not authorized to perform this action"}, status: :unauthorized unless session.inlude? :admin_id
+    # end
 
+    # def find_users
+    # 	User.find(params[:id])
+    # end
+
+    def set_user
+        @user = User.find(params[:id])
+    end
+
+    def user_params
+        params.permit(:username, :password, :password_confirmation)
+    end
 end
