@@ -1,6 +1,12 @@
 class AdminsController < ApplicationController
   before_action :administration, only: [:show]
-  skip_before_action :authorize, only: [:show, :create]
+  skip_before_action :authorize, only: [:index, :show, :create]
+
+  #GET /admins
+  def index
+    admin = Admin.all
+    render json: admin, status: :ok
+  end
 	
   # GET /admin
   def show
