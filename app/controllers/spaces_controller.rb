@@ -4,8 +4,8 @@ class SpacesController < ApplicationController
 
 	# GET /spaces
 	def index
-		@spaces = Space.all
-		render json: @spaces, status: :ok
+		spaces = Space.all
+		render json: spaces , include: [:media]
 	end
 
 	# GET /spaces/:id
@@ -21,9 +21,9 @@ class SpacesController < ApplicationController
 
 	# PATCH /spaces/:id
 	def update
-		space = find_space
-		space.update(find_space)
-		render json: space, status: :created
+	space = find_space
+	space.update(space_params)
+	render json: space, status: :ok
 	end
 
 	# DELETE /spaces/:id
@@ -39,7 +39,7 @@ class SpacesController < ApplicationController
 	end
 
 	def space_params
-		params.require(:space).permit(:name, :price, :location, :description)
+		params.permit(:name, :price, :location, :description, :admin_id)
 	end
 
 	# def authorize
