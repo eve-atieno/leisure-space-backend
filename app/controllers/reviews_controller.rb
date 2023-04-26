@@ -1,6 +1,7 @@
 class ReviewsController < ApplicationController
 	skip_before_action :authorized, only: [:create, :loggedin, :index, :show, :update, :destroy]
 
+
 	# GET /reviews
 	def index
 		@reviews = Review.all
@@ -25,7 +26,9 @@ class ReviewsController < ApplicationController
 	end
 
 	def review_params
+
 		params.require(:review).permit(:comment, :rating , :profile_id, :space_id)
+
 	end
 
 	def render_not_found_response
