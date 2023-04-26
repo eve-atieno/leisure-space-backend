@@ -6,6 +6,7 @@ class CreateSpaces < ActiveRecord::Migration[7.0]
       t.string :description
       t.string :location
       t.integer :price
+      t.string :category
       t.references :admin, null: false, foreign_key: true
 
 
