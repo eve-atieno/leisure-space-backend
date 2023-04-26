@@ -3,7 +3,7 @@ class UsersController < ApplicationController
     
     def index
         user = User.all
-        render json: user, include: [:services, :books]
+        render json: user,include: [:profiles] 
     end
 
     def show
@@ -43,7 +43,7 @@ class UsersController < ApplicationController
     private
 
     def set_user
-        @user = Usr.find(params[:id])
+        @user = User.find(params[:id])
     end
 
     def user_params
