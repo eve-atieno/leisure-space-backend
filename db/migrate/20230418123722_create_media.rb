@@ -3,7 +3,8 @@ class CreateMedia < ActiveRecord::Migration[7.0]
     create_table :media do |t|
 
       t.string :image_url
-
+      
+      
       t.references :space, null: false, foreign_key: true
 
       t.timestamps
