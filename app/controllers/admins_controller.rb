@@ -1,4 +1,5 @@
 class AdminsController < ApplicationController
+
   skip_before_action :authorized, only: [:create, :loggedin, :index, :show, :update, :destroy]
 
   def index
@@ -26,6 +27,7 @@ class AdminsController < ApplicationController
   end
 
   def admin_params
+
     params.permit(:email, :password, :password_confirmation, :name)
   end
 
