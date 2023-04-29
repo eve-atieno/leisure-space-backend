@@ -5,7 +5,7 @@ class SpacesController < ApplicationController
 	# GET /spaces
 	def index
 		spaces = Space.all
-		render json: spaces , include: [:media]
+		render json: spaces , include: [:media, :reviews]
 	end
 
 	# GET /spaces/:id
@@ -39,7 +39,7 @@ class SpacesController < ApplicationController
 	end
 
 	def space_params
-		params.permit(:name, :price, :location, :description, :admin_id)
+		params.permit(:name, :price, :location, :description, :category, :admin_id)
 	end
 
 	# def authorize
