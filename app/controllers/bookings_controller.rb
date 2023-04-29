@@ -1,27 +1,28 @@
 class BookingsController < ApplicationController
 
-    skip_before_action :authorize, only: [:show, :index, :create, :destroy, :checkout]
+    skip_before_action :authorized, only: [:create, :loggedin, :index, :show, :update, :destroy]
 
     # GET /bookings
     def index
-        user = User.find_by(id: session[:user_id])
-        @bookings = user.bookings.all
-        total = @bookings.sum(:price)
-        @booking_count = @bookings.booking_count
-        render json: { bookingItems: @bookings, total: total, count: @booking_count }, include: {
-            user: { except: [:password_digest, :created_at, :updated_at] }
-        }, except: [:created_at, :updated_at], status: :created
+    booking= Booking.all
+    render json: booking,include: [:space, :profile]
     end
+
+    def show
+        booking = Booking.find_by(id: params[:id])
+        render json: booking
+    end
+    
 
     # POST /bookings
     def create
-        user = User.find_by(id: session[:user_id])
-        bookings = user.bookings.all
-        booking = user.bookings.create!(booking_params)
-        total = bookings.sum(:price)
-        booking_count = bookings.count
-        render json: { bookingItems: bookings, total, count: booking_count }, status: :created
-    end
+        booking = Booking.create(booking_params)
+        if booking.valid?
+          render json: { booking: booking }, status: :created
+        else
+          render json: { error: user.errors.full_messages.join(', ') }, status: :unprocessable_entity
+        end
+      end
 
     # DELETE /bookings/:id
     def destroy
@@ -41,6 +42,10 @@ class BookingsController < ApplicationController
         head :no_content
     end
 
+
+
+
+
     private
 
     # Use callbacks to share common
@@ -50,7 +55,7 @@ class BookingsController < ApplicationController
 
     # Allow a list of trusted parameters through
     def booking_params
-        params.require(booking).permit(:name, :image, :price, :user_id)
+        params.permit(:start_date, :end_date, :profile_id, :space_id)
     end
 
     def render_not_found_response
