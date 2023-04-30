@@ -12,9 +12,26 @@ class MediaController < ApplicationController
     end
 
     def create
-        media=Medium.create(media_params)
-        render json: media
-    end
+        if params[:image_url].present?
+          file_ext = File.extname(params[:image_url].original_filename).downcase
+          if %w(.jpg .jpeg .png).include?(file_ext)
+            @medium = Medium.new(medium_params)
+            if @medium.save
+              render json: @medium, status: :created
+            else
+              render json: @medium.errors, status: :unprocessable_entity
+            end
+          else
+            render json: { error: 'Invalid file type. Only JPG, JPEG and PNG files are allowed.' }, status: :unprocessable_entity
+          end
+        else
+          render json: { error: 'Image file is required.' }, status: :unprocessable_entity
+        end
+      end
+      
+      
+      
+
 
     def update
         media=Medium.find(params[:id])
@@ -30,9 +47,9 @@ class MediaController < ApplicationController
 
     private
 
-    def media_params
+    def medium_params
         params.permit(:image_url, :space_id)
-    end
+      end
 
 
 end
