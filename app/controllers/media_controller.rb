@@ -1,4 +1,5 @@
 class MediaController < ApplicationController
+    skip_before_action :authorized, only: [:create, :loggedin, :index, :show, :update, :destroy]
 
     def index
         media=Medium.all

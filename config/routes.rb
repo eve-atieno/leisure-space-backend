@@ -8,12 +8,22 @@ Rails.application.routes.draw do
   resources :spaces, only: [:index, :show, :create, :update, :destroy]
   resources :categories, only: [:index, :show, :destroy, :create, :update]
 
-  post "/signup", to: "users#create"
-  post "/me", to: "users#show"
-  post "/login", to: "sessions#create"
-  delete "/logout", to: "sessions#destroy"
+
+  get '/login', to: 'sessions#index'
+  post '/login', to: 'sessions#create'
+  get '/login/:id', to: 'sessions#show'
+  post '/user_login', to: "sessions#create_user"
+
+
+  delete '/logout', to: "sessions#destroy"
+
+  post '/admin/create', to: 'admins#create'
 
   # admin
+  post 'admin/login', to: 'admin#login'
+  post '/login', to: 'admin#login'
+  post '/signup', to: 'admin#signup'
+
   post "/adminin", to: "sessions#in"
   delete "/adminout", to: "sessions#out"
   get "/ad", to: "admins#show"

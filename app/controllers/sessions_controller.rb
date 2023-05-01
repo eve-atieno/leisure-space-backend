@@ -1,39 +1,32 @@
 class SessionsController < ApplicationController
-    before_action :administration
-    skip_before_action :administration, only: [:create, :destroy, :in]
-    skip_before_action :authorize, only:[:create, :in, :out]
+  skip_before_action :authorized, only: [:create, :destroy, :create_user, :create_admin]
 
-    # POST /login
-    def create
-        user = User.find_by(username: params[:username])
-        if user&.authenticate(params[:password])
-            sesssion[:user_id] = user.id
-            render json: user, status: :created
-        else
-            render json: { errors: ["Invalid username or password"] }, status: :unauthorized
-        end
-    end
+  def create
+    user_or_admin = User.find_by(email: params[:email]) || Admin.find_by(email: params[:email])
 
-    # DELETE /logout
-    def destroy
-        session.delete :user_id
-        head :no_content
+    if user_or_admin && user_or_admin.authenticate(params[:password])
+      if user_or_admin.is_a?(User)
+        token = encode_token({ user_id: user_or_admin.id })
+        render json: { loggedin: true, user: user_or_admin, jwt: token }, status: :accepted
+      else
+        token = encode_token({ admin_id: user_or_admin.id })
+        render json: { loggedin: true, admin: user_or_admin, jwt: token }, status: :accepted
+      end
+    else
+      render json: { error: 'Invalid email or password' }, status: :unauthorized
     end
+  end
 
-    # POST /adminin
-    def in
-        admin = Admin.find_by(admin_name: params[:admin_name])
-        if admin$.authenticate(params[:password])
-            session[:admin_id] = admin.id
-            render json: admin, status: :created
-        else
-            render json: { errors: ["Invalid admin_name or password"] }, status: :unauthorized
-        end
-    end
 
-    # DELETE /adminout
-    def out
-        session.delete :admin_id
-        head :no_content
-    end
+  def destroy
+    cookies.delete(:jwt_token)
+    render json: { message: 'Logged out successfully' }
+  end
+
+  private
+
+  def session_params
+    params.permit(:email, :password)
+  end
 end
+

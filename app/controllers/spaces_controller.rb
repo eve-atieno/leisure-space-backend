@@ -1,12 +1,11 @@
 class SpacesController < ApplicationController
 
-	before_action :find_space, only: %i[ show update destroy ]
-	skip_before_action :authorize, only: %i[ index show create update destroy ]
-	
+    skip_before_action :authorized, only: [:create, :index, :show, :update, :destroy]
+
 	# GET /spaces
 	def index
-		@spaces = Space.all
-		render json: @spaces, status: :ok
+		spaces = Space.all
+		render json: spaces , include: [:media, :reviews]
 	end
 
 	# GET /spaces/:id
@@ -22,9 +21,9 @@ class SpacesController < ApplicationController
 
 	# PATCH /spaces/:id
 	def update
-		space = find_space
-		space.update(find_space)
-		render json: space, status: :created
+	space = find_space
+	space.update(space_params)
+	render json: space, status: :ok
 	end
 
 	# DELETE /spaces/:id
@@ -40,7 +39,7 @@ class SpacesController < ApplicationController
 	end
 
 	def space_params
-		params.require(:space).permit(:name, :price, :location, :description)
+		params.permit(:name, :price, :location, :description, :category, :admin_id)
 	end
 
 	# def authorize

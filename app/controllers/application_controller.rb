@@ -1,26 +1,58 @@
 class ApplicationController < ActionController::API
-    include ActionController::Cookies
-    
-    rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_response
-    # rescue_from ActiveRecord::RecordNotFound, with: :render_not_found_response
 
-    before_action :authorize
- 
+  # Use Puma as the app server
+  before_action :authorized
 
-    def authorize
-        return render json: { errors: ["Not authorized"] }, status: :unauthorized unless session.include? :user_id
+  def encode_token(payload)
+    # should store secret in env variable
+    JWT.encode(payload, 'my_s3cr3t')
+  end
+
+  def auth_header
+    # { Authorization: 'Bearer <token>' }
+    request.headers['Authorization']
+  end
+
+  def decoded_token
+    if auth_header
+      token = auth_header.split(' ')[1]
+      # header: { 'Authorization': 'Bearer <token>' }
+      begin
+        JWT.decode(token, 'my_s3cr3t', true, algorithm: 'HS256')
+      rescue JWT::DecodeError
+        nil
+      end
     end
-     
-    # admin authorization
-    def administration
-        return render json: { errors: ["Not Admin!"] }, status: :unauthorized unless session.include? :admin_id
+  end
+
+  def current_user
+    if decoded_token
+      user_id = decoded_token[0]['user_id']
+      @user = User.find_by(id: user_id)
     end
+  end
 
-    # error handling
-    def render_unprocessable_entity_response(invalid)
-        render json: { errors: invalid.record.errors.full_messages }, status: :unprocessable_entity
+  def current_admin
+    if decoded_token
+      admin_id = decoded_token[0]['admin_id']
+      @admin = Admin.find_by(id: admin_id)
     end
+  end
 
+  def logged_in?
+    !!current_user || !!current_admin
+  end
 
+  def authorized
+    render json: { message: 'Please log in' }, status: :unauthorized unless logged_in?
+  end
+
+  def authorized_user
+    render json: { message: 'You are not authorized to perform this action as a user' }, status: :unauthorized unless logged_in? && !!current_user
+  end
+
+  def authorized_admin
+    render json: { message: 'You are not authorized to perform this action as an admin' }, status: :unauthorized unless logged_in? && !!current_admin
+  end
 
 end
